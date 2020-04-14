@@ -33,7 +33,7 @@ int main(void) {
 	
 	temp2 = temp2 >> 1;
 	temp3 = temp3 >> 2;
-	temp4 = temp3 >> 3;
+	temp4 = temp4 >> 3;
 
 	cntavail = 0x04 - (temp1 + temp2 + temp3 + temp4);
 	PORTC = cntavail;
