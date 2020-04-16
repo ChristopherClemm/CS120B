@@ -1,7 +1,7 @@
-/*	Author: cclem004
- *  Partner(s) Name: 
- *	Lab Section:
- *	Assignment: Lab #  Exercise #
+/*	Author: Christopher Clemm cclem004@ucr.edu
+ *  Partner(s) Name: NA
+ *	Lab Section:23
+ *	Assignment: Lab #2  Exercise #3
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
