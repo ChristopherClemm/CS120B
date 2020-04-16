@@ -1,7 +1,7 @@
-/*	Author: Christopher Clemm cclem004@ucr.edu
- *  Partner(s) Name: NA
- *	Lab Section:23
- *	Assignment: Lab #2  Exercise #4
+/*	Author: cclem004
+ *  Partner(s) Name: 
+ *	Lab Section:
+ *	Assignment: Lab #  Exercise #
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -51,7 +51,10 @@ int main(void) {
 	temp3 = temp1 | temp2;
 	diff = total & 0xFC;
 	PORTD = diff | temp3;
-	
+        total = 0x0000;
+	diff = 0x00;
+	temp1 = 0x00;
+	temp2 = 0x00;	
 
 	
 

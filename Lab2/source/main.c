@@ -51,7 +51,10 @@ int main(void) {
 	temp3 = temp1 | temp2;
 	diff = total & 0xFC;
 	PORTD = diff | temp3;
-	
+        total = 0x0000;
+	diff = 0x00;
+	temp1 = 0x00;
+	temp2 = 0x00;	
 
 	
 
