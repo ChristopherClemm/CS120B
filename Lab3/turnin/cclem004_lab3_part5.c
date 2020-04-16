@@ -39,12 +39,12 @@ int main(void) {
 	}
 	else
 	{
-		out = 0x01;
+		out = 0x00;
 	}
 	PORTB = out;
 	
 	tempA = 0x0000; 
-	out = 0x01;
+	out = 0x00;
     }
     return 1;
 }
