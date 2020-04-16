@@ -17,14 +17,15 @@ int main(void) {
 	DDRA = 0x00; PORTA = 0xFF; //input
 	DDRB = 0x00; PORTB = 0xFF; //input
 	DDRC = 0xFF; PORTC = 0x00; //output
-	unsigned char tempA,tempC, tempKey; 
+	unsigned char tempA,tempC, tempKey, tempS; 
 	tempA = 0x00;
-	
+	tempS = 0x00;
 	tempKey = 0x00;
 	tempC = 0x00;
     /* Insert your solution below */
     while (1) {
-	tempA = PINA;
+	tempA = PINA & 0x0F;
+	tempS = PINA;
 
 	if(tempA <= 0x02)
 	{
@@ -46,12 +47,12 @@ int main(void) {
 	{
 		tempC = 0x3E;
 	}
-	else
+	else if (tempA <= 0x0F)
 	{
 		tempC = 0x3F;
 	}
-	tempA = tempA >> 4;
-	if(tempA == 0x03)
+	tempS = tempS >> 4;
+	if(tempS == 0x03)
 	{
 		tempKey = 0x80;
 	}

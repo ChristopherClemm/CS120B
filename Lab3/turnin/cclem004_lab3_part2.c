@@ -25,8 +25,11 @@ int main(void) {
     /* Insert your solution below */
     while (1) {
 	tempA = PINA;
-
-	if(tempA <= 0x02)
+	if(tempA <= 0x00)
+	{
+		tempC = 0x40;
+	}
+	else if(tempA <= 0x02)
 	{
 		tempC = 0x60;
 	}	
