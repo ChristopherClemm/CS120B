@@ -13,7 +13,7 @@
 #endif
 
 
-enum States{Init, LED1ON, LED2ON}state;
+enum States{Init, LED1ON, LED2ON, LED1ONWAIT, LED2ONWAIT}state;
 void tick();
 
 int main(void) {
@@ -30,7 +30,6 @@ PORTB = 0x00;
 while(1)
 {
 	tick();
-
 }
 	return 1;
 }
@@ -47,20 +46,42 @@ void tick()
 		case LED1ON:
 			if((PINA & 0x01) == 0x01)
 			{
-				state = LED2ON;
+				state = LED2ONWAIT;
 			}
 			else
 			{
 				state = LED1ON;
 			}	
 			break;
+		case LED1ONWAIT:
+		{
+			if((PINA & 0x01) == 0x01)
+			{
+				state = LED1ONWAIT;
+			}
+			else
+			{
+				state = LED1ON;	
+			}
+			break;
+		}
 		
+		case LED2ONWAIT:
+		{
+			if((PINA & 0x01) == 0x01)
+                        {
+                                state = LED2ONWAIT;                                                                                                                                                                                                           }
+                        else                                                                                                                                                                                                                                  {
+                                state = LED2ON;                                                                                                                                                                                                               }
+                        break;  
+		}
+			
 		case LED2ON:
 		{
 			if((PINA & 0x01) == 0x01)
 			{
 			
-				state = LED1ON;
+				state = LED1ONWAIT;
 			}
 			else
 			{
@@ -86,6 +107,16 @@ void tick()
 			break;					
 		}
 		case LED2ON:
+		{
+			PORTB = 0x02;
+			break;
+		}
+		case LED1ONWAIT:
+		{
+			PORTB = 0x01;
+			break;
+		}
+		case LED2ONWAIT:
 		{
 			PORTB = 0x02;
 			break;
