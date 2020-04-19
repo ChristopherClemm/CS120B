@@ -12,19 +12,31 @@
 #include "simAVRHeader.h"
 #endif
 
+
+enum States{Init, LED1ON, LED2ON}state;
+void tick();
+
 int main(void) {
     /* Insert DDR and PORT initializations */
 DDRA = 0x00; PORTA = 0xFF; //input
 DDRB = 0xFF; PORTB = 0x00; //output
-
-	enum States{Init, LED1ON, LED2ON}state;
 	//unsigned char button; //, LEDB0, LEDB1;
 	//button = 0x00;
 	//LEDB0 = 0x00;
 	//LEDB1 =0x00;
-    /* Insert your solution below */
-    while (1) {
-	
+   /* Insert your solution below */
+state = Init;
+PORTB = 0x00;
+while(1)
+{
+	tick();
+
+}
+return 1;
+}
+   
+void tick()
+{	
 	switch(state)
 	{
 		case Init:
@@ -33,21 +45,21 @@ DDRB = 0xFF; PORTB = 0x00; //output
 			break;
 		}
 		case LED1ON:
-		{
-			if((~PINA & 0x01) == 0x01)
+			if((PINA & 0x01) == 0x01)
 			{
-				state = LED2ON;	
+				state = LED2ON;
 			}
 			else
 			{
 				state = LED1ON;
-			}
+			}	
 			break;
-		}
+		
 		case LED2ON:
 		{
-			if((~PINA & 0x01) == 0x01)
+			if((PINA & 0x01) == 0x01)
 			{
+			
 				state = LED1ON;
 			}
 			else
@@ -62,6 +74,7 @@ DDRB = 0xFF; PORTB = 0x00; //output
 			break;
 		}
 	}
+
 	switch(state)
 	{
 		case LED1ON:
@@ -79,6 +92,6 @@ DDRB = 0xFF; PORTB = 0x00; //output
 			break;
 		}
 	}
-    }
-    return 1;
 }
+    
+
