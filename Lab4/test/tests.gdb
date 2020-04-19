@@ -66,6 +66,19 @@ expectPORTB 0x00
 expect state FIRSTBUTTON
 checkResult
 
+test "PINA: 0x04, PINA 0x02 state: WAIT => PORTC: 0x06 "
+setPINA 0x04
+set state = WAIT
+continue 1
+setPINA 0x00
+continue 1
+setPINB 0x02
+continue 2
+expect state UNLOCK
+expectPORTB 0x00
+checkResult
+
+
 # Report on how many tests passed/tests ran
 set $passed=$tests-$failed
 eval "shell echo Passed %d/%d tests.\n",$passed,$tests

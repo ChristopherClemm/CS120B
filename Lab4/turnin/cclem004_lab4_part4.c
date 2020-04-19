@@ -136,7 +136,7 @@ void tick()
 		}
 		case UNLOCK:
 		{
-			if( PORTB = 0x01)
+			if( PORTB == 0x01)
 			{
 				PORTB = 0x00;
 			}
