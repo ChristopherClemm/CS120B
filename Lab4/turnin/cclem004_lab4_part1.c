@@ -32,7 +32,7 @@ while(1)
 	tick();
 
 }
-return 1;
+	return 1;
 }
    
 void tick()
@@ -77,6 +77,9 @@ void tick()
 
 	switch(state)
 	{
+		case Init:
+			break;
+
 		case LED1ON:
 		{
 			PORTB = 0x01;
