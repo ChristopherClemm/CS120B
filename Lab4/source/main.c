@@ -12,53 +12,63 @@
 #include "simAVRHeader.h"
 #endif
 
+int main(void)
+{
 	DDRA = 0x00; PORTA = 0xFF; //input
 	DDRB = 0xFF; PORTB = 0x00; //output
 	//DDRC = 0xFF; PORTC = 0x00; //output
 	
-	enum States{Init, LED1ON, LED2ON)state;
+	enum States{Init, LED1ON, LED2ON}state;
 
-	unisgned char button, LEDB0, LEDB1;
-	button = 0x00;
-	LEDB0 = 0x00;
-	LEDB1 =0x00;
+	//unsigned char button, LEDB0, LEDB1;
+	//button = 0x00;
+	//LEDB0 = 0x00;
+	//LEDB1 =0x00;
 
-
-int main(void) {
-	button = PINA;
-	
-	switch(state)
+	while(1)
 	{
+	//	button = PINA;
+	
+		switch(state)
+		{
 
-		case Init: 
-			state = LED1ON;
-			break;
-		case LED1ON:
-			if((PINA & 0x01 ) == 0x01)
+			case Init: 
 			{
 				state = LED1ON;
+				break;
 			}
-			else
+			case LED1ON:
 			{
-				state = LED2ON;
+				if((PINA & 0x01 ) == 0x01)
+				{
+					state = LED1ON;
+				}	
+				else
+				{
+					state = LED2ON;
+				}
+				break;
 			}
-			break;
-		case LED2ON:
-			if(PINA & 0x01) == 0x00)
+			case LED2ON:
 			{
-				state = LED2ON;
+				if((PINA & 0x01) == 0x00)
+				{
+					state = LED2ON;
+				}
+				else
+				{
+					state = LED1ON;		
+				}
+				break;
 			}
-			else
+			default:
 			{
-				state = LED1ON;		
+				state = Init;
+				break;
 			}
-			break;
-		case default:
-			state = INit;
-			break;
-	}
+		}
 
-	s		 
+			 
 
 
 	}
@@ -66,8 +76,8 @@ int main(void) {
     /* Insert DDR and PORT initializations */
 	
     /* Insert your solution below */
-    while (1) {
-
-    }
+    
+	
+    
     return 1;
 }
