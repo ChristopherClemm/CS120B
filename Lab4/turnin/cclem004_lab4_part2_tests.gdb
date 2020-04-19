@@ -51,7 +51,7 @@ setPINA 0x02
 set state = WAIT
 continue 1
 expect state DECREASE
-#expectPORTC 0x06
+expectPORTC 0x06
 checkResult
 
 # Report on how many tests passed/tests ran

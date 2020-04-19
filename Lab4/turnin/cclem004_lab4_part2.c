@@ -13,7 +13,7 @@
 #endif
 
 
-enum States{Init, INCREASE, DECREASE, WAIT, RESET}state;
+enum States{Init, INCREASE, DECREASE, WAIT, RESET, WAIT2}state;
 void tick();
 
 int main(void) {
@@ -46,17 +46,17 @@ void tick()
 		}
 		case WAIT:
 		{
-			if((((PINA & 0x01) == 0x01)) && ((PINA & 0x02) == 0x02))
-			{
-				state = RESET;
-			}
-			else if((((PINA & 0x01) == 0x01)) && !((PINA & 0x02) == 0x02))
+			if((PINA & 0x03) == 0x01)
 			{
 				state = INCREASE;
 			}
-			else if(!(((PINA & 0x01) == 0x01)) && ((PINA & 0x02) == 0x02)) 
+			else if((PINA & 0x03) == 0x02)
 			{
 				state = DECREASE;
+			}
+			else if((PINA & 0x03) == 0x03)
+			{
+				state = RESET;
 			}
 			else
 			{
@@ -66,20 +66,38 @@ void tick()
 		}
 		case INCREASE:
 		{
-			state = WAIT;
+			state = WAIT2;
 			break;
 		}
 		
 		case DECREASE:
 		{
-			state = WAIT;
+			state = WAIT2;
 			break;
 		} 
 		
 		case RESET:
 		{
-			state = WAIT;
+			state = WAIT2;
 			break;
+		}
+		case WAIT2:
+		{
+			if((PINA & 0x03) == 0x03)
+			{
+				state = RESET;
+			}
+			else if((PINA & 0x03) == 0x01 || ((PINA & 0x03) == 0x02))
+			{
+				state = WAIT2;
+			}
+			else
+			{
+
+				state = WAIT;
+			}
+			break;
+
 		}
 		default:
 		{
@@ -99,7 +117,7 @@ void tick()
 		}
 		case INCREASE:
 		{
-			if(PORTC < 0x0A)
+			if(PORTC < 0x09)
 			{
 				PORTC = PORTC + 0x01;	
 			}
@@ -116,6 +134,10 @@ void tick()
 		case RESET:
 		{
 			PORTC = 0x00;
+			break;
+		}
+		case WAIT2:
+		{
 			break;
 		}
 		default:

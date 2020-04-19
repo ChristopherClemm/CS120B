@@ -13,23 +13,24 @@
 #endif
 
 
-enum States{Init, LED1ON, LED2ON, LED1ONWAIT, LED2ONWAIT}state;
+enum States{Init, INCREASE, DECREASE, WAIT, RESET, WAIT2}state;
 void tick();
 
 int main(void) {
     /* Insert DDR and PORT initializations */
 DDRA = 0x00; PORTA = 0xFF; //input
-DDRB = 0xFF; PORTB = 0x00; //output
+DDRC = 0xFF; PORTC = 0x00; //output
 	//unsigned char button; //, LEDB0, LEDB1;
 	//button = 0x00;
 	//LEDB0 = 0x00;
 	//LEDB1 =0x00;
    /* Insert your solution below */
 state = Init;
-PORTB = 0x00;
+PORTC = 0x07;
 while(1)
 {
 	tick();
+
 }
 	return 1;
 }
@@ -40,54 +41,63 @@ void tick()
 	{
 		case Init:
 		{
-			state = LED1ON;
+			state = WAIT;
 			break;
 		}
-		case LED1ON:
-			if((PINA & 0x01) == 0x01)
+		case WAIT:
+		{
+			if((PINA & 0x03) == 0x01)
 			{
-				state = LED2ONWAIT;
+				state = INCREASE;
+			}
+			else if((PINA & 0x03) == 0x02)
+			{
+				state = DECREASE;
+			}
+			else if((PINA & 0x03) == 0x03)
+			{
+				state = RESET;
 			}
 			else
 			{
-				state = LED1ON;
+				state = WAIT;
 			}	
 			break;
-		case LED1ONWAIT:
+		}
+		case INCREASE:
 		{
-			if((PINA & 0x01) == 0x01)
-			{
-				state = LED1ONWAIT;
-			}
-			else
-			{
-				state = LED1ON;	
-			}
+			state = WAIT2;
 			break;
 		}
 		
-		case LED2ONWAIT:
+		case DECREASE:
 		{
-			if((PINA & 0x01) == 0x01)
-                        {
-                                state = LED2ONWAIT;                                                                                                                                                                                                           }
-                        else                                                                                                                                                                                                                                  {
-                                state = LED2ON;                                                                                                                                                                                                               }
-                        break;  
+			state = WAIT2;
+			break;
+		} 
+		
+		case RESET:
+		{
+			state = WAIT2;
+			break;
 		}
-			
-		case LED2ON:
+		case WAIT2:
 		{
-			if((PINA & 0x01) == 0x01)
+			if((PINA & 0x03) == 0x03)
 			{
-			
-				state = LED1ONWAIT;
+				state = RESET;
+			}
+			else if((PINA & 0x03) == 0x01 || ((PINA & 0x03) == 0x02))
+			{
+				state = WAIT2;
 			}
 			else
 			{
-				state = LED2ON;
+
+				state = WAIT;
 			}
 			break;
+
 		}
 		default:
 		{
@@ -101,24 +111,33 @@ void tick()
 		case Init:
 			break;
 
-		case LED1ON:
+		case WAIT:
 		{
-			PORTB = 0x01;
 			break;					
 		}
-		case LED2ON:
+		case INCREASE:
 		{
-			PORTB = 0x02;
+			if(PORTC < 0x09)
+			{
+				PORTC = PORTC + 0x01;	
+			}
 			break;
 		}
-		case LED1ONWAIT:
+		case DECREASE:
 		{
-			PORTB = 0x01;
+			if(PORTC > 0x00)
+			{
+				PORTC = PORTC - 0x01;
+			}
 			break;
 		}
-		case LED2ONWAIT:
+		case RESET:
 		{
-			PORTB = 0x02;
+			PORTC = 0x00;
+			break;
+		}
+		case WAIT2:
+		{
 			break;
 		}
 		default:

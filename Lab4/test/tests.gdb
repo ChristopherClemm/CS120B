@@ -29,62 +29,30 @@ echo Running all tests..."\n\n
 # Example test:
 
 # Add tests below
-test "PINA: 0x00, state: LED1ON => PORTB: 0x01 "
+test "PINA: 0x00, state: WAIT => PORTC: 0x07 "
 setPINA 0x00
-set state = LED1ON
+set state = WAIT
 continue 1
-expectPORTB 0x01
-expect state LED1ON
+expectPORTC 0x07
+expect state WAIT
 checkResult
 
-test "PINA: 0x01, state: LED1ON => PORTB: 0x02 "
+
+test "PINA: 0x01, state: WAIT => PORTC: 0x08 "
 setPINA 0x01
-set state = LED1ON
+set state = WAIT
 continue 1
-expect state LED2ON
-expectPortB 0x02
+expectPORTC 0x08
+expect state INCREASE
 checkResult
 
-test "PINA: 0x00, state: LED2N => PORTB: 0x02 "
-setPINA 0x00
-set state = LED2ON
+test "PINA: 0x02, state: WAIT => PORTC: 0x06 "
+setPINA 0x02
+set state = WAIT
 continue 1
-expectPORTB 0x02
-expect state LED2ON
+expect state DECREASE
+expectPORTC 0x06
 checkResult
-
-
-test "PINA: 0x01, state: LED2N => PORTB: 0x01 "
-setPINA 0x01
-set state = LED2ON
-continue 1
-expectPORTB 0x01
-expect state LED1ON
-checkResult
-
-
-test "PINA: 0x01, state: LED2N => PORTB: 0x01 "
-setPINA 0x01
-set state = LED2ON
-continue 1
-setPINA 0x00
-continue 1
-expectPORTB 0x01
-expect state LED1ON
-checkResult
-
-
-
-test "PINA: 0x00, state: LED2N => PORTB: 0x01 "
-setPINA 0x00
-set state = LED2ON
-continue 1
-setPINA 0x01
-continue 1
-expectPORTB 0x01
-expect state LED1ON
-checkResult
-
 
 # Report on how many tests passed/tests ran
 set $passed=$tests-$failed
