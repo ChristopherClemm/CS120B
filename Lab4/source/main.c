@@ -26,7 +26,7 @@ DDRB = 0xFF; PORTB = 0x00; //output
 	//LEDB1 =0x00;
    /* Insert your solution below */
 state = Init;
-PORTB = 0x01;
+PORTB = 0x00;
 while(1)
 {
 	tick();
@@ -74,10 +74,19 @@ void tick()
 		
 		case FIRSTBUTTONRELEASE:
 		{
-			if(!(PINA & 0x07) == 0x04)
+			if((PINA & 0x07) == 0x04)
 			{
-				state = WAIT2;
+				state = FIRSTBUTTONRELEASE;
+			} 
+			else if(PINA  == 0x00)
+			{
+				state = SECONDBUTTON;
 			}
+			else
+			{
+				state = WAIT;
+			}
+
 			break;
 		}
 		case SECONDBUTTON:
@@ -135,8 +144,10 @@ void tick()
 			PORTB = 0x00;
 			break;
 		}
-		case FIRSTBUTTON:
-		{
+		case FIRSTBUTTONRELEASE:
+		{	
+			break;
+		}
 		
 		default:
 		{

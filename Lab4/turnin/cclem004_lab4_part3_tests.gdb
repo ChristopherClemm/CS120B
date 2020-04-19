@@ -29,29 +29,41 @@ echo Running all tests..."\n\n
 # Example test:
 
 # Add tests below
-test "PINA: 0x00, state: WAIT => PORTC: 0x07 "
+test "PINA: 0x00, state: WAIT => PORTB: 0x00 "
 setPINA 0x00
 set state = WAIT
 continue 1
-expectPORTC 0x07
+expectPORTB 0x00
 expect state WAIT
 checkResult
 
 
-test "PINA: 0x01, state: WAIT => PORTC: 0x08 "
-setPINA 0x01
+test "PINA: 0x04, state: WAIT => PORTC: 0x00 "
+setPINA 0x04
 set state = WAIT
 continue 1
-expectPORTC 0x08
-expect state INCREASE
+expectPORTB 0x00
+expect state FIRSTBUTTON
 checkResult
 
-test "PINA: 0x02, state: WAIT => PORTC: 0x06 "
-setPINA 0x02
+test "PINA: 0x04, PINA 0x02 state: WAIT => PORTC: 0x06 "
+setPINA 0x04
 set state = WAIT
 continue 1
-expect state DECREASE
-expectPORTC 0x06
+setPINA 0x00
+continue 1
+setPINB 0x02
+continue 1
+expect state SECONDBUTTON
+expectPORTB 0x00
+checkResult
+
+test "PINA: 0x07, state: WAIT => PORTC: 0x00 "
+setPINA 0x04
+set state = WAIT
+continue 1
+expectPORTB 0x00
+expect state FIRSTBUTTON
 checkResult
 
 # Report on how many tests passed/tests ran
