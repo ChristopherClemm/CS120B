@@ -98,15 +98,15 @@ void tick()
 		{
 			if((PINA & 0x07) == array[i])
 			{
-				if(i > 1 )
+				
+				if(i < 3 )
 				{
-				 i = 10;	
+					i = 0;	
 					if(PORTB == 0x01)
 					{
-						i = 10;
 						state = LOCK;
 					}
-					else
+					else if(PORTB == 0x00)
 					{
 						state = UNLOCK;
 					}
