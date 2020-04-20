@@ -93,7 +93,14 @@ void tick()
 		{
 			if((PINA & 0x07) == 0x02)
 			{
-				state = UNLOCK;
+				if(PORTB == 0x01)
+				{
+					state = LOCK;
+				}
+				else
+				{
+					state = UNLOCK;
+				}
 			}
 			else if (PINA == 0x00)
 			{
@@ -136,10 +143,6 @@ void tick()
 		}
 		case UNLOCK:
 		{
-			if( PORTB == 0x01)
-			{
-				PORTB = 0x00;
-			}
 			PORTB = 0x01;
 			break;
 		}
