@@ -16,7 +16,7 @@
 enum States{Init, LOCK, FIRSTBUTTON, FIRSTBUTTONRELEASE, SECONDBUTTON,WAIT, UNLOCK}state;
 void tick();
 unsigned char array[4] = {0x04, 0x01, 0x02, 0x01};
-unsigned char i = 0;
+unsigned char i = 0x00;
 
 int main(void) {
     /* Insert DDR and PORT initializations */
@@ -98,10 +98,12 @@ void tick()
 		{
 			if((PINA & 0x07) == array[i])
 			{
-				if(i == 3)
+				if(i > 1 )
 				{
+				 i = 10;	
 					if(PORTB == 0x01)
 					{
+						i = 10;
 						state = LOCK;
 					}
 					else
@@ -130,6 +132,7 @@ void tick()
 		case UNLOCK:
 		{
 			state = WAIT;
+			break;
 		}
 		default:
 		{
