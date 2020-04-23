@@ -24,7 +24,7 @@ int main(void) {
 	tempC = 0x00;
     /* Insert your solution below */
     while (1) {
-	tempA = PINA;	
+	tempA =~PINA;	
 	if(tempA <= 0x00)
 	{
 		tempC = 0x40;
@@ -54,6 +54,24 @@ int main(void) {
 		tempC = 0x3F;
 	}
 	
+	 /*
+	if(~PINA & 0x01)
+	{
+		tempC = 0x01;
+	}
+	else if(~PINA & 0x02)
+	{
+		tempC = 0x02;
+	}
+	else if(~PINA & 0x04)
+	{
+		tempC = 0x04;
+	}
+	else if(~PINA & 0x08)
+	{
+		tempC = 0x08;
+	}
+	*/
 	PORTC = tempC;
 	tempC = 0x00;	
     }
