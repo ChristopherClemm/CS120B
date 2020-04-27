@@ -25,7 +25,8 @@ int main(void) {
 	tempC = 0x00;
     /* Insert your solution below */
     while (1) {
-	tempA =~(PINA & 0x0F);	
+	tempA =~(PINA);
+	tempA = tempA & 0x0F;	
 	if(tempA <= 0x00)
 	{
 		tempC = 0x40;
