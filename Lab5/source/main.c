@@ -13,10 +13,8 @@
 #endif
 
 
-enum States{Init, NEXTSTATE, WAIT, WAIT2}state;
+enum States{Init, INCREASE, DECREASE, WAIT, RESET, WAIT2}state;
 void tick();
-unsigned char array[14] = {0x01, 0x02, 0x04, 0x08, 0x04, 0x02, 0x01, 0x00, 0x0F, 0x00, 0x0F, 0x00, 0x0F, 0x00};
-unsigned char i = 0x00;
 
 int main(void) {
     /* Insert DDR and PORT initializations */
@@ -28,7 +26,7 @@ DDRC = 0xFF; PORTC = 0x00; //output
 	//LEDB1 =0x00;
    /* Insert your solution below */
 state = Init;
-PORTC = 0x01;
+PORTC = 0x07;
 while(1)
 {
 	tick();
@@ -48,9 +46,17 @@ void tick()
 		}
 		case WAIT:
 		{
-			if((~PINA & 0x01) == 0x01)
+			if((~PINA & 0x03) == 0x01)
 			{
-				state = NEXTSTATE;
+				state = INCREASE;
+			}
+			else if((~PINA & 0x03) == 0x02)
+			{
+				state = DECREASE;
+			}
+			else if((~PINA & 0x03) == 0x03)
+			{
+				state = RESET;
 			}
 			else
 			{
@@ -58,32 +64,41 @@ void tick()
 			}	
 			break;
 		}
-		case NEXTSTATE:
+		case INCREASE:
 		{
-			if((~PINA & 0x01) == 0x01)
-			{
-				state = WAIT2;
-			}
-			else
-			{	
-			state = WAIT;
-			}
+			state = WAIT2;
+			break;
+		}
+		
+		case DECREASE:
+		{
+			state = WAIT2;
+			break;
+		} 
+		
+		case RESET:
+		{
+			state = WAIT2;
 			break;
 		}
 		case WAIT2:
 		{
-			if((~PINA & 0x01) == 0x01)
+			if((~PINA & 0x03) == 0x03)
+			{
+				state = RESET;
+			}
+			else if((~PINA & 0x03) == 0x01 || ((~PINA & 0x03) == 0x02))
 			{
 				state = WAIT2;
 			}
 			else
 			{
+
 				state = WAIT;
 			}
 			break;
 
 		}
-		
 		default:
 		{
 			state = Init;
@@ -100,14 +115,25 @@ void tick()
 		{
 			break;					
 		}
-		case NEXTSTATE:
+		case INCREASE:
 		{
-			i++;
-			if(i > 13)
+			if(PORTC < 0x09)
 			{
-				i = 0;
+				PORTC = PORTC + 0x01;	
 			}
-			PORTC = array[i];
+			break;
+		}
+		case DECREASE:
+		{
+			if(PORTC > 0x00)
+			{
+				PORTC = PORTC - 0x01;
+			}
+			break;
+		}
+		case RESET:
+		{
+			PORTC = 0x00;
 			break;
 		}
 		case WAIT2:
