@@ -38,6 +38,11 @@ echo Running all tests..."\n\n
 # Check pass/fail
 #checkResult
 
+test "PINA 0xFF PORTC: 0x40"
+setPINA 0xFF
+continue 1
+expectPORTC 0x40
+checkResult
 # Add tests below
 
 # Report on how many tests passed/tests ran

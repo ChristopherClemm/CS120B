@@ -1,9 +1,10 @@
-No line 19 in file "main.c".
-Make breakpoint pending on future shared library load? (y or [n]) [answered N; input not from terminal]
-test/initDebugger.gdb:13: Error in sourced command file:
-Argument required (one or more breakpoint numbers).
+Breakpoint 1 at 0xea: file source/main.c, line 27.
+Note: automatically using hardware breakpoints for read-only addresses.
 ======================================================
 Running all tests..."
 
+"PINA 0xFF PORTC: 0x40"...
+	Expected 0x40 
+	PORTC '0x800028:	0x3f
 ======================================================
 Remote doesn't know how to detach
