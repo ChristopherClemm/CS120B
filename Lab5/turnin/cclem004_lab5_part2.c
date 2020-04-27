@@ -27,7 +27,7 @@ DDRC = 0xFF; PORTC = 0x00; //output
 	//LEDB1 =0x00;
    /* Insert your solution below */
 state = Init;
-PORTC = 0x07;
+PORTC = 0x00;
 while(1)
 {
 	tick();

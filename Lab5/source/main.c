@@ -1,10 +1,10 @@
 // DEMO LINK: https://drive.google.com/open?id=1YVivvN5ASzbvnEOZMQC6P6vXUCUk6iDs
 /*	Author: Christopher Clemm
- *  Partner(s) Name: NA
- *	Lab Section:23
- *	Assignment: Lab #3  Exercise #2
+ *  Partner(s) Name: 
+ *	Lab Section: 23
+ *	Assignment: Lab # 5 Exercise #2
  *	Exercise Description: [optional - include for your own benefit]
- *	
+ *
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */
@@ -13,69 +13,139 @@
 #include "simAVRHeader.h"
 #endif
 
+
+enum States{Init, INCREASE, DECREASE, WAIT, RESET, WAIT2}state;
+void tick();
+
 int main(void) {
     /* Insert DDR and PORT initializations */
-	DDRA = 0x00; PORTA = 0xFF; //input
-	//DDRB = 0x00; PORTB = 0xFF; //input
-	DDRC = 0xFF; PORTC = 0x00; //output
-	unsigned char tempA,tempC; 
-	tempA = 0x00;
-	
-	
-	tempC = 0x00;
-    /* Insert your solution below */
-    while (1) {
-	tempA =~(PINA);
-	tempA = tempA & 0x0F;	
-	if(tempA <= 0x00)
-	{
-		tempC = 0x40;
-	}
-	else if(tempA <= 0x02)
-	{
-		tempC = 0x60;
-	}	
-	else if(tempA <= 0x04)
-	{
-	 	tempC = 0x70;
-	}
-	else if (tempA <= 0x06)
-	{
-	 	tempC = 0x38; 
-	}
-	else if (tempA <= 0x09)
-	{
-		tempC = 0x3C;
-	} 
-	else if (tempA <= 0x0C)
-	{
-		tempC = 0x3E;
-	}
-	else
-	{
-		tempC = 0x3F;
-	}
-	
-	 /*
-	if(~PINA & 0x01)
-	{
-		tempC = 0x01;
-	}
-	else if(~PINA & 0x02)
-	{
-		tempC = 0x02;
-	}
-	else if(~PINA & 0x04)
-	{
-		tempC = 0x04;
-	}
-	else if(~PINA & 0x08)
-	{
-		tempC = 0x08;
-	}
-	*/
-	PORTC = tempC;
-	tempC = 0x00;	
-    }
-    return 1;
+DDRA = 0x00; PORTA = 0xFF; //input
+DDRC = 0xFF; PORTC = 0x00; //output
+	//unsigned char button; //, LEDB0, LEDB1;
+	//button = 0x00;
+	//LEDB0 = 0x00;
+	//LEDB1 =0x00;
+   /* Insert your solution below */
+state = Init;
+PORTC = 0x00;
+while(1)
+{
+	tick();
+
 }
+	return 1;
+}
+   
+void tick()
+{	
+	switch(state)
+	{
+		case Init:
+		{
+			state = WAIT;
+			break;
+		}
+		case WAIT:
+		{
+			if((~PINA & 0x03) == 0x01)
+			{
+				state = INCREASE;
+			}
+			else if((~PINA & 0x03) == 0x02)
+			{
+				state = DECREASE;
+			}
+			else if((~PINA & 0x03) == 0x03)
+			{
+				state = RESET;
+			}
+			else
+			{
+				state = WAIT;
+			}	
+			break;
+		}
+		case INCREASE:
+		{
+			state = WAIT2;
+			break;
+		}
+		
+		case DECREASE:
+		{
+			state = WAIT2;
+			break;
+		} 
+		
+		case RESET:
+		{
+			state = WAIT2;
+			break;
+		}
+		case WAIT2:
+		{
+			if((~PINA & 0x03) == 0x03)
+			{
+				state = RESET;
+			}
+			else if((~PINA & 0x03) == 0x01 || ((~PINA & 0x03) == 0x02))
+			{
+				state = WAIT2;
+			}
+			else
+			{
+
+				state = WAIT;
+			}
+			break;
+
+		}
+		default:
+		{
+			state = Init;
+			break;
+		}
+	}
+
+	switch(state)
+	{
+		case Init:
+			break;
+
+		case WAIT:
+		{
+			break;					
+		}
+		case INCREASE:
+		{
+			if(PORTC < 0x09)
+			{
+				PORTC = PORTC + 0x01;	
+			}
+			break;
+		}
+		case DECREASE:
+		{
+			if(PORTC > 0x00)
+			{
+				PORTC = PORTC - 0x01;
+			}
+			break;
+		}
+		case RESET:
+		{
+			PORTC = 0x00;
+			break;
+		}
+		case WAIT2:
+		{
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
+}
+    
+
