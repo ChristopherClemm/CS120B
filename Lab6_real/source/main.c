@@ -28,7 +28,7 @@ DDRB = 0xFF; PORTB = 0x00; //output
 	//LEDB1 =0x00;
    /* Insert your solution below */
 state = Init;
-PORTB = 0x00;
+PORTB = 0x07;
 
 TimerSet(100);
 TimerOn();
