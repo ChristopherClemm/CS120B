@@ -49,10 +49,15 @@ void tick()
 		}
 		case First:
 		{ 
-			if((~PINA & 0x01) == 0x01)
+			if((~PINA & 0x01) == 0x01 && i == 0x00)
                         {
                                 state = Hold;
                         }
+			else if ((~PINA & 0x01) == 0x00 && i == 0x01)
+			{
+				i = 0x00;
+				state = SecondThird;
+			}
 			else
 			{
 				state = SecondThird;
@@ -61,12 +66,17 @@ void tick()
 		}
 		case SecondThird:
 		{
-			 if((~PINA & 0x01) == 0x01)
+			 if((~PINA & 0x01) == 0x01 && i == 0x00)
                         {
                                 state = Hold;
                         }
-			 else
-			 {
+			else if ((~PINA & 0x01) == 0x00 && i == 0x01)
+                        {
+                                i = 0x00;
+				state = Third;
+                        }
+			else
+			{
 	
 				state = Third;
 			 }
@@ -74,9 +84,14 @@ void tick()
 		}
 		case Third:
 		{
-			 if((~PINA & 0x01) == 0x01)
+			 if((~PINA & 0x01) == 0x01 && i == 0x00)
                         {
                                 state = Hold;
+                        }
+			 else if ((~PINA & 0x01) == 0x00 && i == 0x01)
+                        {
+                                i = 0x00;
+				state = SecondFirst;
                         }
 			else
 			{
@@ -86,9 +101,14 @@ void tick()
 		}
 		case  SecondFirst:
 		{ 
-			if((~PINA & 0x01) == 0x01)
+			if((~PINA & 0x01) == 0x01 && i == 0x00)
                         {
                                 state = Hold;
+                        }
+			else if ((~PINA & 0x01) == 0x00 && i == 0x01)
+                        {
+                                i = 0x00;
+				state = First;
                         }
 			else
 			{	
@@ -113,12 +133,14 @@ void tick()
 		{
 			if((~PINA & 0x01) == 1)
 			{
+				i = 0x01;
 				state = First;
 			}
 			else
 			{
 				state = Reset;
 			}
+			break;
 		}
 		default:
 		{
