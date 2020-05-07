@@ -1,7 +1,8 @@
-/*	Author: lab
+// DEMO LINK: https://drive.google.com/open?id=1YVivvN5ASzbvnEOZMQC6P6vXUCUk6iDs
+/*	Author: Christopher Clemm
  *  Partner(s) Name: 
- *	Lab Section:
- *	Assignment: Lab #  Exercise #
+ *	Lab Section: 23
+ *	Assignment: Lab # 5 Exercise #2
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -13,167 +14,154 @@
 #include "simAVRHeader.h"
 #endif
 
-enum States{Init, First, SecondThird, Third, SecondFirst, Hold, Reset}state;
+
+enum States{Init, INCREASE, DECREASE, WAIT, RESET, WAIT2}state;
 void tick();
 unsigned char i = 0x00;
-
 int main(void) {
-	DDRA = 0x00;
-       	PORTA = 0xFF;
-	DDRB = 0xFF;
-	PORTB = 0x00;
-	TimerSet(300);
-	TimerOn();
-	//unsigned char tmpB = 0x00;
-	
     /* Insert DDR and PORT initializations */
+DDRA = 0x00; PORTA = 0xFF; //input
+DDRB = 0xFF; PORTB = 0x00; //output
+	//unsigned char button; //, LEDB0, LEDB1;
+	//button = 0x00;
+	//LEDB0 = 0x00;
+	//LEDB1 =0x00;
+   /* Insert your solution below */
+state = Init;
+PORTB = 0x00;
 
-    /* Insert your solution below */
-    while (1) {
+TimerSet(100);
+TimerOn();
+
+while(1)
+{
 	tick();
 	while(!TimerFlag);
 	TimerFlag = 0;
-    }
-    return 1;
+}	
+	return 1;
 }
-
+   
 void tick()
-{
+{	
 	switch(state)
 	{
 		case Init:
 		{
-
-			state = First;
+			state = WAIT;
 			break;
 		}
-		case First:
-		{ 
-			if((~PINA & 0x01) == 0x01 && i == 0x00)
-                        {
-                                state = Hold;
-                        }
-			else if ((~PINA & 0x01) == 0x00 && i == 0x01)
+		case WAIT:
+		{
+			if((~PINA & 0x03) == 0x01)
+			{
+				state = INCREASE;
+			}
+			else if((~PINA & 0x03) == 0x02)
+			{
+				state = DECREASE;
+			}
+			else if((~PINA & 0x03) == 0x03)
+			{
+				state = RESET;
+			}
+			else
+			{
+				state = WAIT;
+			}	
+			break;
+		}
+		case INCREASE:
+		{
+			state = WAIT2;
+			break;
+		}
+		
+		case DECREASE:
+		{
+			state = WAIT2;
+			break;
+		} 
+		
+		case RESET:
+		{
+			state = WAIT;
+			break;
+		}
+		case WAIT2:
+		{
+		 	i = i +1;	
+			if((~PINA & 0x03) == 0x03)
+			{
+				state = RESET;
+			}
+			else if((~PINA & 0x03) == 0x01 && i == 10)
 			{
 				i = 0x00;
-				state = SecondThird;
+				state = INCREASE;
+			}
+			else if((~PINA & 0x03) == 0x02 && i == 10)
+			{
+				i = 0x00;
+				state = DECREASE;
+			}
+			else if ((i < 10) && (((~PINA & 0x03) == 0x02) ||((~PINA & 0x03) == 0x01)))
+			{
+				state = WAIT2;
 			}
 			else
 			{
-				state = SecondThird;
+				state = WAIT;
 			}
 			break;
-		}
-		case SecondThird:
-		{
-			 if((~PINA & 0x01) == 0x01 && i == 0x00)
-                        {
-                                state = Hold;
-                        }
-			else if ((~PINA & 0x01) == 0x00 && i == 0x01)
-                        {
-                                i = 0x00;
-				state = Third;
-                        }
-			else
-			{
-	
-				state = Third;
-			 }
-			break;
-		}
-		case Third:
-		{
-			 if((~PINA & 0x01) == 0x01 && i == 0x00)
-                        {
-                                state = Hold;
-                        }
-			 else if ((~PINA & 0x01) == 0x00 && i == 0x01)
-                        {
-                                i = 0x00;
-				state = SecondFirst;
-                        }
-			else
-			{
-				state = SecondFirst;
-			}
-			break;
-		}
-		case  SecondFirst:
-		{ 
-			if((~PINA & 0x01) == 0x01 && i == 0x00)
-                        {
-                                state = Hold;
-                        }
-			else if ((~PINA & 0x01) == 0x00 && i == 0x01)
-                        {
-                                i = 0x00;
-				state = First;
-                        }
-			else
-			{	
-				state = First;
-			}
-			break;
-		}
-		case Hold:
-		{
-			
-			if((~PINA & 0x01) == 1)
-			{
-				state = Hold;
-			}
-			else
-			{
-				state = Reset;
-			}
-			break;
-		}
-		case Reset:
-		{
-			if((~PINA & 0x01) == 1)
-			{
-				i = 0x01;
-				state = First;
-			}
-			else
-			{
-				state = Reset;
-			}
-			break;
+
 		}
 		default:
 		{
 			state = Init;
 			break;
 		}
-	
-
 	}
+
 	switch(state)
 	{
 		case Init:
 			break;
-		case First:
-			PORTB = 0x01;
+
+		case WAIT:
+		{
+			break;					
+		}
+		case INCREASE:
+		{
+			if(PORTB < 0x09)
+			{
+				PORTB = PORTB + 0x01;	
+			}
 			break;
-		case SecondThird:
-			PORTB = 0x02;
+		}
+		case DECREASE:
+		{
+			if(PORTB > 0x00)
+			{
+				PORTB = PORTB - 0x01;
+			}
 			break;
-		case Third:
-			PORTB = 0x04;
+		}
+		case RESET:
+		{
+			PORTB = 0x00;
 			break;
-		case SecondFirst:
-			PORTB = 0x02;
+		}
+		/*case WAIT2:
+		{
 			break;
-		case Hold:
-			break;
-		case Reset:
-			break;	
+		}*/
 		default:
+		{
 			break;
+		}
 	}
-
-
-
 }
+    
+
