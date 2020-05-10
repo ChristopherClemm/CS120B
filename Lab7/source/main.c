@@ -1,8 +1,7 @@
-// DEMO LINK: https://drive.google.com/open?id=1YVivvN5ASzbvnEOZMQC6P6vXUCUk6iDs
-/*	Author: Christopher Clemm
+/*	Author: lab
  *  Partner(s) Name: 
- *	Lab Section: 23
- *	Assignment: Lab # 5 Exercise #2
+ *	Lab Section:
+ *	Assignment: Lab #  Exercise #
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
@@ -15,167 +14,208 @@
 #include "simAVRHeader.h"
 #endif
 
-
-enum States{Init, INCREASE, DECREASE, WAIT, RESET, WAIT2}state;
+enum States{Init, First, SecondThird, Third, SecondFirst, Hold, Reset}state;
 void tick();
 unsigned char i = 0x00;
-unsigned char b = 0x00;
+unsigned char score = 0x05;
+unsigned char win = 0x00;
+unsigned char gameWon = 0x00;
 int main(void) {
+	DDRA = 0x00;
+       	PORTA = 0xFF;
+	DDRB = 0xFF; PORTB = 0x00;
+	DDRC = 0xFF; PORTC = 0x00;
+	DDRD = 0xFF; PORTD = 0x00;
+	TimerSet(300);
+	TimerOn();
+
+	LCD_init();
+
+	//unsigned char tmpB = 0x00;
+	
     /* Insert DDR and PORT initializations */
-DDRA = 0x00; PORTA = 0xFF; //input
-DDRC = 0xFF; PORTC = 0x00; //output
-DDRD = 0xFF; PORTD = 0x00; //output
-	//unsigned char button; //, LEDB0, LEDB1;
-	//button = 0x00;
-	//LEDB0 = 0x00;
-	//LEDB1 =0x00;
-   /* Insert your solution below */
-state = Init;
 
-LCD_init();
-
-LCD_WriteData(0 + '0');
-TimerSet(100);
-TimerOn();
-
-while(1)
-{
+    /* Insert your solution below */
+    while (1) {
 	tick();
 	while(!TimerFlag);
 	TimerFlag = 0;
-}	
-	return 1;
+    }
+    return 1;
 }
-   
+
 void tick()
-{	
+{
 	switch(state)
 	{
 		case Init:
 		{
-			state = WAIT;
-			break;
-		}
-		case WAIT:
-		{
-			if((~PINA & 0x03) == 0x01)
-			{
-				state = INCREASE;
-			}
-			else if((~PINA & 0x03) == 0x02)
-			{
-				state = DECREASE;
-			}
-			else if((~PINA & 0x03) == 0x03)
-			{
-				state = RESET;
-			}
-			else
-			{
-				state = WAIT;
-			}	
-			break;
-		}
-		case INCREASE:
-		{
-			state = WAIT2;
-			break;
-		}
-		
-		case DECREASE:
-		{
-			state = WAIT2;
-			break;
-		} 
-		
-		case RESET:
-		{
-			state = WAIT;
-			break;
-		}
-		case WAIT2:
-		{
-		 	i = i +1;	
-			if((~PINA & 0x03) == 0x03)
-			{
-				state = RESET;
-			}
-			else if((~PINA & 0x03) == 0x01 && i == 10)
-			{
-				i = 0x00;
-				state = INCREASE;
-			}
-			else if((~PINA & 0x03) == 0x02 && i == 10)
-			{
-				i = 0x00;
-				state = DECREASE;
-			}
-			else if ((i < 10) && (((~PINA & 0x03) == 0x02) ||((~PINA & 0x03) == 0x01)))
-			{
-				state = WAIT2;
-			}
-			else
-			{
-				state = WAIT;
-			}
-			break;
 
+			state = First;
+			break;
+		}
+		case First:
+		{ 
+			if((~PINA & 0x01) == 0x01 && i == 0x00)
+                        {
+				win = 0x00;
+                                state = Hold;
+                        }
+			else if ((~PINA & 0x01) == 0x00 && i == 0x01)
+			{
+				i = 0x00;
+				state = SecondThird;
+			}
+			else
+			{
+				state = SecondThird;
+			}
+			break;
+		}
+		case SecondThird:
+		{
+			 if((~PINA & 0x01) == 0x01 && i == 0x00)
+                        {
+				win = 0x01;
+                                state = Hold;
+                        }
+			else if ((~PINA & 0x01) == 0x00 && i == 0x01)
+                        {
+                                i = 0x00;
+				state = Third;
+                        }
+			else
+			{
+	
+				state = Third;
+			 }
+			break;
+		}
+		case Third:
+		{
+			 if((~PINA & 0x01) == 0x01 && i == 0x00)
+                        {
+				win = 0x00;
+                                state = Hold;
+                        }
+			 else if ((~PINA & 0x01) == 0x00 && i == 0x01)
+                        {
+                                i = 0x00;
+				state = SecondFirst;
+                        }
+			else
+			{
+				state = SecondFirst;
+			}
+			break;
+		}
+		case  SecondFirst:
+		{ 
+			if((~PINA & 0x01) == 0x01 && i == 0x00)
+                        {
+				win = 0x01;
+                                state = Hold;
+                        }
+			else if ((~PINA & 0x01) == 0x00 && i == 0x01)
+                        {
+                                i = 0x00;
+				state = First;
+                        }
+			else
+			{	
+				state = First;
+			}
+			break;
+		}
+		case Hold:
+		{
+			
+			if((~PINA & 0x01) == 1)
+			{
+				state = Hold;
+			}
+			else
+			{
+				state = Reset;
+			}
+			break;
+		}
+		case Reset:
+		{
+			if((~PINA & 0x01) == 1)
+			{
+				i = 0x01;
+				state = First;
+			}
+			else
+			{
+				state = Reset;
+			}
+			break;
 		}
 		default:
 		{
 			state = Init;
 			break;
 		}
-	}
+	
 
+	}
 	switch(state)
 	{
 		case Init:
 			break;
+		case First:
+			PORTB = 0x01;
+			break;
+		case SecondThird:
+			PORTB = 0x02;
+			break;
+		case Third:
+			PORTB = 0x04;
+			break;
+		case SecondFirst:
+			PORTB = 0x02;
+			break;
+		case Hold:
+			LCD_ClearScreen();
+			if(win == 0x01)
+			{
+				if(score < 0x09)
+				{
+					score = score + 0x01;
+					LCD_WriteData(score + '0');
+				}
+				else
+				{
+					gameWon = 0x01;
+					LCD_DisplayString(1,"WINNER!!!!");
+				}
+			}
+			else
+			{
+				if(score > 0x00)
+				{
+					score = score - 0x01;
+				}
+				
+				LCD_WriteData(score + '0');
+			}
+			break;
+		case Reset:
+			LCD_ClearScreen();
+				if(gameWon == 0x01)
+				{
+					gameWon = 0x00;
+					score = 0x05;
+				}
+				LCD_WriteData(score + '0');
 
-		case WAIT:
-		{
-			break;					
-		}
-		case INCREASE:
-		{
-			i= 0x00;
-			LCD_ClearScreen();
-			if(b < 0x09)
-			{
-				b = b + 0x01;	
-			}
-			LCD_WriteData(b + '0');
-			break;
-		}
-		case DECREASE:
-		{
-			i = 0x00;
-			LCD_ClearScreen();
-			if(b > 0x00)
-			{
-				b = b - 0x01;
-			}
-			LCD_WriteData(b + '0');
-			break;
-		}
-		case RESET:
-		{
-			i= 0x00;
-			LCD_ClearScreen();
-			b = 0x00;
-			LCD_WriteData(b + '0');
-			break;
-		}
-		/*case WAIT2:
-		{
-			break;
-		}*/
+			break;	
 		default:
-		{
 			break;
-		}
 	}
-}
-    
 
+
+
+}
