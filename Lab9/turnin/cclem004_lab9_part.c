@@ -8,16 +8,11 @@
  *	code, is my own original work.
  */
 #include <avr/io.h>
-#include "timer.h"
 #ifdef _SIMULATE_
 #include "simAVRHeader.h"
 #endif
 
-unsigned char i = 0x00;
-unsigned char j = 0x00;
-double notes[9] = {392.00,523.25, 329.63, 349.23, 392.00, 523.25, 493.88, 523.25};
-int time[9] = {5, 5, 10, 5, 5, 5, 10, 10};
-enum States{INIT, WAIT, PLAY, WAIT2} state;
+enum States{INIT, ONE, TWO, THREE, WAIT} state;
 void set_PWM(double frequency)
 {
 	static double current_frequency;
@@ -61,7 +56,15 @@ void Tick(){
 		{
 			if ((~PINA & 0x07) == 0x01)
 			{
-				state = PLAY;
+				state = ONE;
+			}
+			else if ((~PINA & 0x07) == 0x02)
+			{
+				state = TWO;
+			}
+			else if ((~PINA & 0x07) == 0x04)
+			{
+				state = THREE;
 			}
 			else
 			{
@@ -69,43 +72,43 @@ void Tick(){
 			}
 			break;
 		}
-		case PLAY:
-		{
-			if(i > 8)
-			{
-				i = 0;
-				j = 0;
-				if((~PINA & 0x07) == 0x01)
-				{
-					state = WAIT2;
-				}
-				else
-				{
-					state = WAIT;
-				}
-			}
-			else
-			{
-				state = PLAY;
-			}
-			
-			break;
-			
-		}
-		
-		case WAIT2:
+		case ONE:
 		{
 			if((~PINA & 0x07) == 0x01)
 			{
-				state = WAIT2;
+				state = ONE;
 			}
 			else
 			{
-				state = PLAY;
+				state = WAIT;
 			}
 			break;
 		}
-		
+		case TWO:
+		{
+			if((~PINA & 0x07) == 0x02)
+                        {
+                                state = TWO;
+                        }
+                        else
+                        {
+                                state = WAIT;
+                        }
+                        break;
+
+		}
+		case THREE:
+		{
+			if((~PINA & 0x07) == 0x04)
+                        {
+                                state = THREE;
+                        }
+                        else
+                        {
+                                state = WAIT;
+                        }
+                        break;
+		}
 		default:
 		{
 			break;
@@ -115,7 +118,6 @@ void Tick(){
 	{
 		case INIT:
 		{
-			set_PWM(0);
 			break;
 		}
 		case WAIT:
@@ -123,23 +125,19 @@ void Tick(){
 			set_PWM(0);
 			break;
 		}
-		case PLAY:
+		case ONE:
 		{
-			if ( j == time[i])
-			{
-				i = i + 1;
-				j = 0;
-			}
-			else
-			{
-				j = j + 1;
-			}
-			set_PWM(notes[i]);
+			set_PWM(261.63);
 			break;
 		}
-		case WAIT2:
+		case TWO:
 		{
-			set_PWM(0);
+			set_PWM(293.66);
+			break;
+		}
+		case THREE:
+		{
+			set_PWM(329.63);
 			break;
 		}
 		default:
@@ -157,13 +155,9 @@ int main(void) {
 	DDRA = 0x00; PORTA = 0xFF; //INPUT
 	PWM_on();
 	state = INIT;
-	TimerSet(100);
-	TimerOn();
     /* Insert your solution below */
     while (1) {
 	Tick();
-	while(!TimerFlag);
-	TimerFlag = 0;
     }
     return 1;
 }
