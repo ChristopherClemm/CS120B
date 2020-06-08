@@ -23,14 +23,14 @@
 // Keypad Setup Values
 #define KEYPADPORT PORTA
 #define KEYPADPIN  PINA
-#define ROW1 0
-#define ROW2 1
-#define ROW3 2
-#define ROW4 3
-#define COL1 4
-#define COL2 5
-#define COL3 6
-#define COL4 7
+#define ROW1 7
+#define ROW2 6
+#define ROW3 5
+#define ROW4 4
+#define COL1 3
+#define COL2 2
+#define COL3 1
+#define COL4 0
 
 ////////////////////////////////////////////////////////////////////////////////
 //Functionality - Gets input from a keypad via time-multiplexing

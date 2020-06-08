@@ -18,7 +18,7 @@
 
 enum keysmstates {out, w} keysmstate;
 unsigned char count = 0;
-int KeySM(int keystate) {
+int Key(int keystate) {
 	unsigned char x;
 	x = GetKeypadKey();
 	
@@ -134,13 +134,16 @@ int KeySM(int keystate) {
 			break;
 			
 			case w:
-			if(x == '\0') keysmstate = out;
-		
+			if(x == '\0')
+			{
+				keysmstate = out;
+			}
 		
 			//LCD_WriteData(0 +'0');
 			break;
 	}
 	return keysmstate;
+}
 }
 
 
